@@ -1,0 +1,39 @@
+package org.maurycy.framework.auth.resource
+
+import jakarta.ws.rs.POST
+import jakarta.ws.rs.Path
+import jakarta.ws.rs.Produces
+import jakarta.ws.rs.core.MediaType
+import jakarta.ws.rs.core.Response
+import org.maurycy.framework.auth.model.LoginDto
+import org.maurycy.framework.auth.model.LoginReturnDto
+import org.maurycy.framework.auth.model.RefreshDto
+import org.maurycy.framework.auth.model.RegisterDto
+import org.maurycy.framework.auth.service.KeycloakService
+
+@Path("keycloak")
+class KeycloakResource(
+    private val keycloakService: KeycloakService
+) {
+
+    @POST
+    @Path("login")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun login(loginDto: LoginDto): LoginReturnDto {
+        return keycloakService.login(loginDto)
+    }
+
+    @POST
+    @Path("refresh")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun refresh(refreshDto: RefreshDto): Response? {
+        return keycloakService.refresh(refreshDto)
+    }
+
+    @POST
+    @Path("register")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun register(registerDto: RegisterDto): Response {
+        return keycloakService.register(registerDto)
+    }
+}
