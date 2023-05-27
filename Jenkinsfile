@@ -47,7 +47,7 @@ pipeline {
                         {
                             sh '''
                                 git remote get-url origin
-                                cp -r ./build/kubernetes/ ./kubernetes/
+                                cp ./build/kubernetes/kubernetes.yml ./kubernetes/auth.yaml
 			            		git add ./kubernetes/
 					            git config user.email "jenkins@example.com"
                                 git config user.name "Jenkins"
