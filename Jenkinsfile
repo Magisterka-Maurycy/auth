@@ -30,15 +30,9 @@ pipeline {
                 sh './gradlew dependencyCheckAnalyze'
             }
         }
-        stage ('my testing'){
-            steps{
-            sh 'ls -lR'
-            }
-        }
         stage('Checkout K8S manifest SCM') {
-
             steps {
-                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'Maurycy_ssh', url: 'git@github.com:Magisterka-Maurycy/authGitOps.git']])
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'Maurycy_ssh', url: 'git@github.com:Magisterka-Maurycy/GitOps.git']])
             }
         }
         stage('Deploy to gitops') {
@@ -47,19 +41,14 @@ pipeline {
                         {
                             sh '''
                                 git remote get-url origin
-                                cp ./build/kubernetes/kubernetes.yml ./kubernetes/auth.yaml
+                                cp ./build/kubernetes/kubernetes.yml ./kubernetes/auth/main.yaml
 			            		git add ./kubernetes/
 					            git config user.email "jenkins@example.com"
                                 git config user.name "Jenkins"
-                                git commit -m 'Jenkins Automatic Deployment'
+                                git commit -m 'Jenkins Automatic Deployment - AUTH'
 					            git push origin HEAD:master
                             '''
                         }
-            }
-        }
-        stage ('my testing2'){
-            steps{
-                sh 'ls -lR'
             }
         }
     }
