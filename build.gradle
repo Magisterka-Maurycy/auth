@@ -38,6 +38,8 @@ dependencies {
 
     testImplementation("io.quarkus:quarkus-jacoco")
     testImplementation("io.quarkus:quarkus-junit5")
+    // https://mvnrepository.com/artifact/org.testcontainers/junit-jupiter
+    testImplementation("org.testcontainers:junit-jupiter:1.18.1")
     testImplementation("io.rest-assured:rest-assured")
 }
 
