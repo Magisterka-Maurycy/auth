@@ -59,6 +59,9 @@ test {
         destinationFile = layout.buildDirectory.file("jacoco-quarkus.exec").get().asFile
     }
     jacocoTestReport.enabled = false
+    reports{
+        junitXml.required.set(true)
+    }
 }
 allOpen {
     annotation("jakarta.ws.rs.Path")
