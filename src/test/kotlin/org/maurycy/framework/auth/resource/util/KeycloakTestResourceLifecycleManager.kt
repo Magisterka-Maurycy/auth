@@ -1,4 +1,4 @@
-package org.maurycy.framework.auth.resource
+package org.maurycy.framework.auth.resource.util
 
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager
 import org.testcontainers.containers.GenericContainer

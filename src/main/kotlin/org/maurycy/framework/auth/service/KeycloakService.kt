@@ -74,13 +74,14 @@ class KeycloakService(
         return response
     }
 
-    fun initialize() {
+    fun initialize(): Boolean {
         if (keycloak.realms().findAll().map(RealmRepresentation::getRealm).contains(realmName)) {
-            return
+            return false
         }
         val realm = buildRealmRepresentation()
         keycloak.realms().create(realm)
         Log.info("realm: ${realm.realm} created")
+        return true
     }
 
     private fun buildRealmRepresentation(): RealmRepresentation {
