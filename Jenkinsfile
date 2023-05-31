@@ -1,6 +1,9 @@
 pipeline {
     agent any
 
+    parameters {
+        booleanParam(name: 'DEPLOY', defaultValue: false, description: 'should changes be deployed')
+    }
     stages {
         stage('Set Chmod') {
             steps {
@@ -62,13 +65,14 @@ pipeline {
                 }
             }
         }
-        stage('Checkout K8S manifest SCM') {
+        stage('Deploy to gitops') {
+            when {
+                expression {
+                    return params.DEPLOY == true
+                }
+            }
             steps {
                 checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'Maurycy_ssh', url: 'git@github.com:Magisterka-Maurycy/GitOps.git']])
-            }
-        }
-        stage('Deploy to gitops') {
-            steps {
                 sshagent(['Maurycy_ssh'])
                         {
                             sh '''
