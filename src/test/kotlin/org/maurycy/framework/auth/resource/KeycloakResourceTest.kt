@@ -115,5 +115,20 @@ class KeycloakResourceTest {
 
     }
 
+    @Test
+    fun refreshFail() {
+        RestAssured.given()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(RefreshDto("failRefreshToken"))
+            .`when`()
+            .post("refresh")
+            .then()
+            .statusCode(400)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(
+                CoreMatchers.containsString("exceptionMessage")
+            )
+    }
+
 
 }
