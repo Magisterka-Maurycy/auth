@@ -19,6 +19,7 @@ dependencies {
     implementation("org.bouncycastle:bcprov-ext-jdk15on:1.70")
 
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
+    implementation("io.quarkus:quarkus-oidc")
     implementation("io.quarkus:quarkus-rest-client-reactive-jackson")
     implementation("io.quarkus:quarkus-resteasy-reactive-jackson")
     implementation("io.quarkus:quarkus-mutiny")
@@ -68,6 +69,14 @@ allOpen {
     annotation("jakarta.enterprise.context.ApplicationScoped")
     annotation("io.quarkus.test.junit.QuarkusTest")
 }
+
+//kotlin {
+//    sourceSets.all {
+//        languageSettings {
+//            languageVersion = "2.0"
+//        }
+//    }
+//}
 
 compileKotlin {
     kotlinOptions.jvmTarget = JavaVersion.VERSION_17

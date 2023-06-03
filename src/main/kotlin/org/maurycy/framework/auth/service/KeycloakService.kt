@@ -14,10 +14,12 @@ import org.keycloak.representations.idm.RealmRepresentation
 import org.keycloak.representations.idm.RoleRepresentation
 import org.keycloak.representations.idm.RolesRepresentation
 import org.keycloak.representations.idm.UserRepresentation
+import org.maurycy.framework.auth.model.CreateRoleDto
 import org.maurycy.framework.auth.model.LoginDto
 import org.maurycy.framework.auth.model.LoginReturnDto
 import org.maurycy.framework.auth.model.RefreshDto
 import org.maurycy.framework.auth.model.RegisterDto
+import org.maurycy.framework.auth.model.UserDto
 import org.maurycy.framework.auth.restClient.KeycloakRestClient
 
 
@@ -117,5 +119,72 @@ class KeycloakService(
         client.protocol = "openid-connect"
         client.isPublicClient = true
         return listOf(client)
+    }
+
+    fun getRoles(): List<RoleRepresentation> {
+        return keycloak.realm(realmName).roles().list().toList()
+    }
+
+    fun createRole(createRoleDto: CreateRoleDto): Boolean {
+        val role = RoleRepresentation()
+        role.name = createRoleDto.name
+        role.description = createRoleDto.description
+
+        keycloak.realm(realmName).roles().list().forEach {
+            if (it.name == role.name) {
+                return false
+            }
+        }
+        keycloak.realm(realmName).roles().create(role)
+        keycloak.realm(realmName).roles().list().forEach {
+            if (it.name == role.name) {
+                return true
+            }
+        }
+        return false
+
+    }
+
+    fun deleteRole(name: String) {
+        return keycloak.realm(realmName).roles().deleteRole(name)
+    }
+
+    fun getUserRoles(userDto: UserDto): List<Any?> {
+        return io.vertx.ext.auth.impl.jose.JWT.parse(userDto.token)
+            .getJsonObject("payload")
+            .getJsonObject("realm_access")
+            .getJsonArray("roles").list
+    }
+
+    fun addRoleToUser(userName: String, roleName: String) {
+        val id = keycloak.realm(realmName).users().search(userName, true)[0].id
+        val userResource = keycloak.realm(realmName).users()[id]
+
+        val roleRepresentationList: List<RoleRepresentation> = userResource.roles().realmLevel().listAvailable()
+
+        for (roleRepresentation in roleRepresentationList) {
+            if (roleRepresentation.name == roleName) {
+                userResource.roles().realmLevel().add(listOf(roleRepresentation))
+                break
+            }
+        }
+    }
+
+    fun getUsers(): List<UserRepresentation> {
+        return keycloak.realm(realmName).users().list().toList()
+
+    }
+
+    fun removeRoleFromUser(userName: String, roleName: String) {
+        val id = keycloak.realm(realmName).users().search(userName, true)[0].id
+        val userResource = keycloak.realm(realmName).users()[id]
+        val roleRepresentationList: List<RoleRepresentation> = userResource.roles().realmLevel().listAll()
+        for (roleRepresentation in roleRepresentationList) {
+            Log.info(roleRepresentation.name)
+            if (roleRepresentation.name == roleName) {
+                userResource.roles().realmLevel().remove(listOf(roleRepresentation))
+                Log.info("role removed")
+            }
+        }
     }
 }

@@ -1,0 +1,11 @@
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:21.1
+    command: "start-dev" # development mode, do not use this in production!
+    container_name: keycloak
+    ports:
+      - "1234:8080"
+    environment: # see https://www.keycloak.org/server/all-config
+      KEYCLOAK_ADMIN: "admin"
+      KEYCLOAK_ADMIN_PASSWORD: "admin"
+      KC_METRICS_ENABLED: "false"
