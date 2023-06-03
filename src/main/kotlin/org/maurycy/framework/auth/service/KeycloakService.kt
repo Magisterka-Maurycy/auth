@@ -121,8 +121,10 @@ class KeycloakService(
         return listOf(client)
     }
 
-    fun getRoles(): List<RoleRepresentation> {
-        return keycloak.realm(realmName).roles().list().toList()
+    fun getRoles(): List<String> {
+        return keycloak.realm(realmName).roles().list().toList().map {
+            it.name
+        }
     }
 
     fun createRole(createRoleDto: CreateRoleDto): Boolean {

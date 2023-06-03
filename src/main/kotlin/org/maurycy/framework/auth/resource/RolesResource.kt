@@ -22,7 +22,7 @@ class RolesResource(
 ) {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    fun getAllRoles(): List<RoleRepresentation> {
+    fun getAllRoles(): List<String> {
         return keycloakService.getRoles()
     }
 
