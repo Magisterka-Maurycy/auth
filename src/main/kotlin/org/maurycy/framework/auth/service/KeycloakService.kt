@@ -8,11 +8,8 @@ import org.eclipse.microprofile.rest.client.inject.RestClient
 import org.keycloak.admin.client.CreatedResponseUtil
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.admin.client.KeycloakBuilder
-import org.keycloak.representations.idm.ClientRepresentation
 import org.keycloak.representations.idm.CredentialRepresentation
-import org.keycloak.representations.idm.RealmRepresentation
 import org.keycloak.representations.idm.RoleRepresentation
-import org.keycloak.representations.idm.RolesRepresentation
 import org.keycloak.representations.idm.UserRepresentation
 import org.maurycy.framework.auth.model.CreateRoleDto
 import org.maurycy.framework.auth.model.LoginDto
@@ -76,50 +73,6 @@ class KeycloakService(
         return response
     }
 
-    fun initialize(): Boolean {
-        if (keycloak.realms().findAll().map(RealmRepresentation::getRealm).contains(realmName)) {
-            return false
-        }
-        val realm = buildRealmRepresentation()
-        keycloak.realms().create(realm)
-        Log.info("realm: ${realm.realm} created")
-        return true
-    }
-
-    private fun buildRealmRepresentation(): RealmRepresentation {
-        val realm = RealmRepresentation()
-        realm.id = realmName
-        realm.realm = realmName
-        realm.isEnabled = true
-        realm.users = listOf()
-        realm.clients = buildClients()
-        realm.groups = listOf()
-        realm.roles = buildRolesRepresentation()
-        return realm
-    }
-
-    private fun buildRolesRepresentation(): RolesRepresentation {
-        val roles = RolesRepresentation()
-        val userRole = RoleRepresentation("user", null, false)
-        val adminRole = RoleRepresentation("admin", null, false)
-        val realmRoles = listOf(userRole, adminRole)
-        roles.realm = realmRoles
-        return roles
-    }
-
-    private fun buildClients(): List<ClientRepresentation> {
-        val client = ClientRepresentation()
-        client.id = clientId
-        client.clientId = clientId
-        client.name = clientId
-        client.isEnabled = true
-        client.redirectUris = listOf("*")
-        client.webOrigins = listOf()
-        client.isDirectAccessGrantsEnabled = true
-        client.protocol = "openid-connect"
-        client.isPublicClient = true
-        return listOf(client)
-    }
 
     fun getRoles(): List<String> {
         return keycloak.realm(realmName).roles().list().toList().map {
@@ -164,11 +117,6 @@ class KeycloakService(
                 break
             }
         }
-    }
-
-    fun getUsers(): List<UserRepresentation> {
-        return keycloak.realm(realmName).users().list().toList()
-
     }
 
     fun removeRoleFromUser(userName: String, roleName: String) {

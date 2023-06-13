@@ -81,7 +81,6 @@ class AccessCheckResourceTest {
         fun before() {
             Log.info("before start")
             if(!set) {
-                keycloakService.initialize()
                 keycloakService.register( RegisterDto(
                     userName,
                     password,

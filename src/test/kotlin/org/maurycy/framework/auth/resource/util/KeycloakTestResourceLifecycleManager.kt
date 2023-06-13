@@ -8,7 +8,6 @@ import org.testcontainers.containers.wait.strategy.Wait
 class KeycloakTestResourceLifecycleManager() : QuarkusTestResourceLifecycleManager {
     private val keycloak: GenericContainer<*> = GenericContainer(KEYCLOAK_DOCKER_IMAGE)
         .withExposedPorts(8080)
-        .withCommand("start-dev")
         .withEnv("DB_VENDOR", "H2")
         .withEnv("KEYCLOAK_ADMIN", "admin")
         .withEnv("KEYCLOAK_ADMIN_PASSWORD", "admin")
@@ -30,6 +29,6 @@ class KeycloakTestResourceLifecycleManager() : QuarkusTestResourceLifecycleManag
     }
 
     companion object {
-        private const val KEYCLOAK_DOCKER_IMAGE: String = "quay.io/keycloak/keycloak:21.1.1"
+        private const val KEYCLOAK_DOCKER_IMAGE: String = "quay.io/maurycy_krzeminski/keycloak"
     }
 }
