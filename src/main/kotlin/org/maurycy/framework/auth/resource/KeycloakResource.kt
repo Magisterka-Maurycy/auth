@@ -5,6 +5,7 @@ import jakarta.ws.rs.Path
 import jakarta.ws.rs.Produces
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
+import jakarta.ws.rs.Consumes
 import org.maurycy.framework.auth.model.LoginDto
 import org.maurycy.framework.auth.model.LoginReturnDto
 import org.maurycy.framework.auth.model.RefreshDto
@@ -19,21 +20,18 @@ class KeycloakResource(
     @POST
     @Path("login")
     @Produces(MediaType.APPLICATION_JSON)
-    fun login(loginDto: LoginDto): LoginReturnDto {
-        return keycloakService.login(loginDto)
-    }
+    @Consumes(MediaType.APPLICATION_JSON)
+    fun login(loginDto: LoginDto): LoginReturnDto = keycloakService.login(loginDto)
 
     @POST
     @Path("refresh")
     @Produces(MediaType.APPLICATION_JSON)
-    fun refresh(refreshDto: RefreshDto): Response? {
-        return keycloakService.refresh(refreshDto)
-    }
+    @Consumes(MediaType.APPLICATION_JSON)
+    fun refresh(refreshDto: RefreshDto): Response? = keycloakService.refresh(refreshDto)
 
     @POST
     @Path("register")
     @Produces(MediaType.APPLICATION_JSON)
-    fun register(registerDto: RegisterDto): Response {
-        return keycloakService.register(registerDto)
-    }
+    @Consumes(MediaType.APPLICATION_JSON)
+    fun register(registerDto: RegisterDto): Response = keycloakService.register(registerDto)
 }
