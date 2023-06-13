@@ -9,7 +9,7 @@ import jakarta.ws.rs.Path
 import jakarta.ws.rs.PathParam
 import jakarta.ws.rs.Produces
 import jakarta.ws.rs.core.MediaType
-import org.keycloak.representations.idm.RoleRepresentation
+import org.jboss.resteasy.reactive.ResponseStatus
 import org.maurycy.framework.auth.model.CreateRoleDto
 import org.maurycy.framework.auth.model.UserDto
 import org.maurycy.framework.auth.model.UserToRoleDto
@@ -41,6 +41,7 @@ class RolesResource(
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("users")
+    @ResponseStatus(200)
     fun userToRole(userToRoleDto: UserToRoleDto) {
         return keycloakService.addRoleToUser(userName = userToRoleDto.user, roleName = userToRoleDto.role)
     }
@@ -48,6 +49,7 @@ class RolesResource(
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("users")
+    @ResponseStatus(200)
     fun removeRoleFromUser(userToRoleDto: UserToRoleDto) {
         return keycloakService.removeRoleFromUser(userName = userToRoleDto.user, roleName = userToRoleDto.role)
     }

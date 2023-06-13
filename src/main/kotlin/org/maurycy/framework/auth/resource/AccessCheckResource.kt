@@ -9,7 +9,7 @@ import org.maurycy.framework.auth.model.UserDto
 import org.maurycy.framework.auth.service.KeycloakService
 
 @Path("access")
-class AccessCheck(
+class AccessCheckResource(
     private val keycloakService: KeycloakService
 ) {
     @POST

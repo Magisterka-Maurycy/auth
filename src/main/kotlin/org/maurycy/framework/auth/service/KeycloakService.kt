@@ -138,13 +138,7 @@ class KeycloakService(
             }
         }
         keycloak.realm(realmName).roles().create(role)
-        keycloak.realm(realmName).roles().list().forEach {
-            if (it.name == role.name) {
-                return true
-            }
-        }
-        return false
-
+        return true
     }
 
     fun deleteRole(name: String) {

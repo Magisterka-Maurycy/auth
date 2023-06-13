@@ -11,7 +11,7 @@ class InitializationService(
     private val keycloakService: KeycloakService
 ) {
 
-    fun initializeKeycloak(@Observes startupEvent: StartupEvent){
+    fun initializeKeycloak(@Observes startupEvent: StartupEvent) {
         Log.info("startup event start")
         keycloakService.initialize()
         Log.info("startup event finished")
