@@ -97,5 +97,6 @@ sonar {
 scmVersion {
     repository {
         customKeyFile.set(project.file('ssh'))
+        customKeyPassword.set("")
     }
 }
