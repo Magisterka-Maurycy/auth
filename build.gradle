@@ -6,7 +6,7 @@ plugins {
     id("org.owasp.dependencycheck") version "8.2.1"
     id("jacoco")
     id("io.quarkus")
-    id ("pl.allegro.tech.build.axion-release") version "1.15.1"
+    id("pl.allegro.tech.build.axion-release") version "1.15.1"
 }
 
 repositories {
@@ -62,7 +62,7 @@ test {
         destinationFile = layout.buildDirectory.file("jacoco-quarkus.exec").get().asFile
     }
     jacocoTestReport.enabled = false
-    reports{
+    reports {
         junitXml.required.set(true)
     }
 }
@@ -89,11 +89,13 @@ compileTestKotlin {
 
 sonar {
     properties {
-        property("sonar.projectKey","auth")
-        property("sonar.coverage.jacoco.xmlReportPaths","build/jacoco-report/jacoco.xml")
+        property("sonar.projectKey", "auth")
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/jacoco-report/jacoco.xml")
     }
 }
-
+build {
+    dependsOn([project.tasks.currentVersion, project.tasks.release])
+}
 scmVersion {
     repository {
         customKeyFile.set(project.file('ssh'))
