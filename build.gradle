@@ -100,3 +100,4 @@ scmVersion {
         customKeyPassword.set("")
     }
 }
+currentVersion.doNotTrackState("")
