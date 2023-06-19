@@ -4,6 +4,7 @@ pipeline {
     parameters {
         booleanParam(name: 'DEPLOY', defaultValue: false, description: 'should changes be deployed')
         booleanParam(name: 'OWASP', defaultValue: false, description: 'should owasp tests be run')
+        booleanParam(name: 'RELEASE', defaultValue: false, description: 'should new version be release')
     }
 
     stages {
@@ -37,11 +38,36 @@ pipeline {
         }
 
         stage('Build') {
+            when{
+                expression {
+                    return params.RELEASE == false
+                }
+            }
             environment {
                 QUAY_CREDS = credentials('Quay-Access')
             }
             steps {
                 sh './gradlew build -Dquarkus.profile=kub -Dquarkus.container-image.username=$QUAY_CREDS_USR -Dquarkus.container-image.password=$QUAY_CREDS_PSW'
+            }
+        }
+        stage('Release') {
+            when{
+                expression {
+                    return params.RELEASE == true
+                }
+            }
+            environment {
+                QUAY_CREDS = credentials('Quay-Access')
+            }
+            steps {
+                sh '''
+                    ./gradlew currentVersion
+                    ./gradlew release
+                    ./gradlew currentVersion 
+                    ./gradlew build -Dquarkus.profile=kub -Dquarkus.container-image.username=$QUAY_CREDS_USR -Dquarkus.container-image.password=$QUAY_CREDS_PSW
+                    ./gradlew publish
+                    ./gradlew currentVersion
+                '''
             }
         }
 
