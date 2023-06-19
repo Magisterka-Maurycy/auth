@@ -94,7 +94,7 @@ sonar {
     }
 }
 build {
-    dependsOn([project.tasks.currentVersion, project.tasks.release])
+    dependsOn([project.tasks.release])
 }
 scmVersion {
     repository {
