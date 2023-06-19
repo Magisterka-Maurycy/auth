@@ -21,12 +21,12 @@ pipeline {
             }
         }
 
-        stage('Test'){
+        stage('Test') {
             steps {
                 sh './gradlew test'
             }
-            post{
-                always{
+            post {
+                always {
                     junit '**/build/test-results/test/TEST*.xml'
                     jacoco(
                             execPattern: '**/build/*.exec',
@@ -38,7 +38,7 @@ pipeline {
         }
 
         stage('Build') {
-            when{
+            when {
                 expression {
                     return params.RELEASE == false
                 }
@@ -51,7 +51,7 @@ pipeline {
             }
         }
         stage('Release') {
-            when{
+            when {
                 expression {
                     return params.RELEASE == true
                 }
@@ -60,59 +60,63 @@ pipeline {
                 QUAY_CREDS = credentials('Quay-Access')
             }
             steps {
-                sh '''
-                    ./gradlew currentVersion -Prelease.customKeyFile="/run/secrets/github-key-release"
-                    ./gradlew release -Prelease.customKeyFile="/run/secrets/github-key-release"
-                    ./gradlew currentVersion -Prelease.customKeyFile="/run/secrets/github-key-release"
-                    ./gradlew build -Dquarkus.profile=kub -Dquarkus.container-image.username=$QUAY_CREDS_USR -Dquarkus.container-image.password=$QUAY_CREDS_PSW
-                    ./gradlew publish -Prelease.customKeyFile="/run/secrets/github-key-release"
-                    ./gradlew currentVersion -Prelease.customKeyFile="/run/secrets/github-key-release"
-                '''
-            }
-        }
-
-        stage('SonarQube analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh "./gradlew sonar"
-                }
-            }
-        }
-
-        stage('Owasp') {
-            when {
-                expression {
-                    return params.OWASP == true
-                }
-            }
-            steps {
-                sh './gradlew dependencyCheckAnalyze'
-            }
-            post {
-                always {
-                    publishHTML (target : [allowMissing: false,
-                                           alwaysLinkToLastBuild: true,
-                                           keepAll: true,
-                                           reportDir: 'build/reports',
-                                           reportFiles: 'dependency-check-report.html',
-                                           reportName: 'OWASP Dependency Check',
-                                           reportTitles: 'OWASP Dependency Check']
-                    )
-                }
-            }
-        }
-
-        stage('Deploy to gitops') {
-            when {
-                expression {
-                    return params.DEPLOY == true
-                }
-            }
-            steps {
-                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'Maurycy_ssh', url: 'git@github.com:Magisterka-Maurycy/GitOps.git']])
                 sshagent(['Maurycy_ssh'])
                         {
-                            sh '''
+                        sh '''
+                        ./gradlew currentVersion -Prelease.customKeyFile="/run/secrets/github-key-release"
+                        ./gradlew release -Prelease.customKeyFile="/run/secrets/github-key-release"
+                        ./gradlew currentVersion -Prelease.customKeyFile="/run/secrets/github-key-release"
+                        ./gradlew build -Dquarkus.profile=kub -Dquarkus.container-image.username=$QUAY_CREDS_USR -Dquarkus.container-image.password=$QUAY_CREDS_PSW
+                        ./gradlew publish -Prelease.customKeyFile="/run/secrets/github-key-release"
+                        ./gradlew currentVersion -Prelease.customKeyFile="/run/secrets/github-key-release"
+                        '''
+                        }
+            }
+        }
+    }
+
+    stage('SonarQube analysis') {
+        steps {
+            withSonarQubeEnv('SonarQube') {
+                sh "./gradlew sonar"
+            }
+        }
+    }
+
+    stage('Owasp') {
+        when {
+            expression {
+                return params.OWASP == true
+            }
+        }
+        steps {
+            sh './gradlew dependencyCheckAnalyze'
+        }
+        post {
+            always {
+                publishHTML(target: [allowMissing         : false,
+                                     alwaysLinkToLastBuild: true,
+                                     keepAll              : true,
+                                     reportDir            : 'build/reports',
+                                     reportFiles          : 'dependency-check-report.html',
+                                     reportName           : 'OWASP Dependency Check',
+                                     reportTitles         : 'OWASP Dependency Check']
+                )
+            }
+        }
+    }
+
+    stage('Deploy to gitops') {
+        when {
+            expression {
+                return params.DEPLOY == true
+            }
+        }
+        steps {
+            checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'Maurycy_ssh', url: 'git@github.com:Magisterka-Maurycy/GitOps.git']])
+            sshagent(['Maurycy_ssh'])
+                    {
+                        sh '''
                                 git remote get-url origin
                                 cp ./build/kubernetes/kubernetes.yml ./kubernetes/auth/main.yaml
 			            		git add ./kubernetes/
@@ -121,9 +125,9 @@ pipeline {
                                 git commit -m 'Jenkins Automatic Deployment - AUTH'
 					            git push origin HEAD:master
                             '''
-                        }
-            }
+                    }
         }
     }
+}
 
 }
