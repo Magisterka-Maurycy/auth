@@ -61,12 +61,12 @@ pipeline {
             }
             steps {
                 sh '''
-                    ./gradlew currentVersion
-                    ./gradlew release
-                    ./gradlew currentVersion 
+                    ./gradlew currentVersion -Prelease.customKeyFile="/run/secrets/github-key-release"
+                    ./gradlew release -Prelease.customKeyFile="/run/secrets/github-key-release"
+                    ./gradlew currentVersion -Prelease.customKeyFile="/run/secrets/github-key-release"
                     ./gradlew build -Dquarkus.profile=kub -Dquarkus.container-image.username=$QUAY_CREDS_USR -Dquarkus.container-image.password=$QUAY_CREDS_PSW
-                    ./gradlew publish
-                    ./gradlew currentVersion
+                    ./gradlew publish -Prelease.customKeyFile="/run/secrets/github-key-release"
+                    ./gradlew currentVersion -Prelease.customKeyFile="/run/secrets/github-key-release"
                 '''
             }
         }
