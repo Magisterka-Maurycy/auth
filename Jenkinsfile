@@ -11,7 +11,6 @@ pipeline {
         stage('Set Chmod') {
             steps {
                 sh 'chmod 777 /var/run/docker.sock'
-                sh 'chmod +x ./gradlew'
             }
         }
 
@@ -63,12 +62,12 @@ pipeline {
                 sshagent(['Maurycy_ssh'])
                         {
                             sh '''
-                        ./gradlew currentVersion -Prelease.customKeyFile="/run/secrets/github-key-release"
-                        ./gradlew release -Prelease.customKeyFile="/run/secrets/github-key-release"
-                        ./gradlew currentVersion -Prelease.customKeyFile="/run/secrets/github-key-release"
+                        ./gradlew currentVersion
+                        ./gradlew release 
+                        ./gradlew currentVersion 
                         ./gradlew build -Dquarkus.profile=kub -Dquarkus.container-image.username=$QUAY_CREDS_USR -Dquarkus.container-image.password=$QUAY_CREDS_PSW
-                        ./gradlew publish -Prelease.customKeyFile="/run/secrets/github-key-release"
-                        ./gradlew currentVersion -Prelease.customKeyFile="/run/secrets/github-key-release"
+                        ./gradlew publish 
+                        ./gradlew currentVersion 
                         '''
                         }
             }

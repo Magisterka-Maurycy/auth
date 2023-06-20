@@ -2,4 +2,4 @@
 !build/*-runner
 !build/*-runner.jar
 !build/lib/*
-!build/quarkus-app/*/ssh
+!build/quarkus-app/*
