@@ -63,7 +63,7 @@ pipeline {
                         {
                             sh '''
                         ./gradlew currentVersion
-                        ./gradlew release 
+                        ./gradlew release -Prelease.disableChecks -Prelease.pushTagsOnly
                         ./gradlew currentVersion 
                         ./gradlew build -Dquarkus.profile=kub -Dquarkus.container-image.username=$QUAY_CREDS_USR -Dquarkus.container-image.password=$QUAY_CREDS_PSW
                         ./gradlew publish 
