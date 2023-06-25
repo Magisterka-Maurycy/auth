@@ -20,12 +20,15 @@ pipeline {
         }
 
         stage('Test') {
+            environment {
+                DISABLE_AUTHORIZATION = true
+            }
             steps {
                 sh './gradlew testNative'
             }
             post {
                 always {
-                    junit '**/build/test-results/test/TEST*.xml'
+                    junit '**/build/test-results/test*/TEST*.xml'
                     jacoco(
                             execPattern: '**/build/*.exec',
                             classPattern: '**/build/classes/kotlin/main',
