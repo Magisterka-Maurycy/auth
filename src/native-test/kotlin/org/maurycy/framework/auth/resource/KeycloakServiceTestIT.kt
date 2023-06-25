@@ -4,4 +4,4 @@ import io.quarkus.test.junit.QuarkusIntegrationTest
 
 
 @QuarkusIntegrationTest
-class KeycloakServiceTestIT: KeycloakServiceTest()
+class KeycloakServiceTestIT : KeycloakServiceTest()

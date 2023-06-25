@@ -1,11 +1,11 @@
 package org.maurycy.framework.auth.resource
 
+import jakarta.ws.rs.Consumes
 import jakarta.ws.rs.POST
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.Produces
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
-import jakarta.ws.rs.Consumes
 import org.maurycy.framework.auth.model.LoginDto
 import org.maurycy.framework.auth.model.LoginReturnDto
 import org.maurycy.framework.auth.model.RefreshDto

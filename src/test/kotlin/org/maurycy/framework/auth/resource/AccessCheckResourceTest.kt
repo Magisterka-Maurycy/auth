@@ -57,6 +57,7 @@ class AccessCheckResourceTest {
                 CoreMatchers.`is`("true")
             )
     }
+
     @Test
     fun falseAdminRole() {
         val res = keycloakService.login(LoginDto(userName, password))
@@ -74,24 +75,28 @@ class AccessCheckResourceTest {
     }
 
 
-        val userName = "us"
-        val password = "pass"
-        val email = "us@us.com"
-        @BeforeEach
-        fun before() {
-            Log.info("before start")
-            if(!set) {
-                keycloakService.register( RegisterDto(
+    val userName = "us"
+    val password = "pass"
+    val email = "us@us.com"
+
+    @BeforeEach
+    fun before() {
+        Log.info("before start")
+        if (!set) {
+            keycloakService.register(
+                RegisterDto(
                     userName,
                     password,
                     email
-                ))
-                set = true
-                Log.info("registered user")
-            }
-            Log.info("before end")
+                )
+            )
+            set = true
+            Log.info("registered user")
         }
-    companion object{
+        Log.info("before end")
+    }
+
+    companion object {
         var set = false
     }
 

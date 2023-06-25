@@ -17,7 +17,7 @@ class AccessCheckResource(
     fun access(accessDto: AccessDto): Boolean {
         val roles = keycloakService.getUserRoles(UserDto(accessDto.token))
         roles.forEach {
-            if(accessDto.oneOfRoles.contains(it)){
+            if (accessDto.oneOfRoles.contains(it)) {
                 return true
             }
         }

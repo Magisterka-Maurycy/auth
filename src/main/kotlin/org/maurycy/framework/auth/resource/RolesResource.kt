@@ -23,7 +23,7 @@ class RolesResource(
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     fun getAllRoles(): List<String> = keycloakService.getRoles()
-    
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     fun createRole(createRoleDto: CreateRoleDto): Boolean = keycloakService.createRole(createRoleDto)
@@ -36,13 +36,15 @@ class RolesResource(
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("users")
     @ResponseStatus(200)
-    fun userToRole(userToRoleDto: UserToRoleDto) = keycloakService.addRoleToUser(userName = userToRoleDto.user, roleName = userToRoleDto.role)
+    fun userToRole(userToRoleDto: UserToRoleDto) =
+        keycloakService.addRoleToUser(userName = userToRoleDto.user, roleName = userToRoleDto.role)
 
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("users")
     @ResponseStatus(200)
-    fun removeRoleFromUser(userToRoleDto: UserToRoleDto) = keycloakService.removeRoleFromUser(userName = userToRoleDto.user, roleName = userToRoleDto.role)
+    fun removeRoleFromUser(userToRoleDto: UserToRoleDto) =
+        keycloakService.removeRoleFromUser(userName = userToRoleDto.user, roleName = userToRoleDto.role)
 
     @POST
     @Path("token")

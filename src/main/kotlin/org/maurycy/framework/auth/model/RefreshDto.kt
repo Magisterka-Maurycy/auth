@@ -1,3 +1,3 @@
 package org.maurycy.framework.auth.model
 
-data class RefreshDto (val refreshToken: String = "")
+data class RefreshDto(val refreshToken: String = "")
