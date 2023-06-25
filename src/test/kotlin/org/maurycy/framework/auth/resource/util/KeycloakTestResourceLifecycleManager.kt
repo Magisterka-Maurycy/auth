@@ -1,5 +1,6 @@
 package org.maurycy.framework.auth.resource.util
 
+import io.quarkus.logging.Log
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.Wait
@@ -11,7 +12,7 @@ class KeycloakTestResourceLifecycleManager() : QuarkusTestResourceLifecycleManag
         .withEnv("DB_VENDOR", "H2")
         .withEnv("KEYCLOAK_ADMIN", "admin")
         .withEnv("KEYCLOAK_ADMIN_PASSWORD", "admin")
-        .waitingFor(Wait.forHttp("/").forPort(8080))
+        .waitingFor(Wait.forHttp("/realms/quarkus").forStatusCode(200).forPort(8080))
 
     override fun start(): Map<String, String> {
         keycloak.start()
@@ -20,6 +21,8 @@ class KeycloakTestResourceLifecycleManager() : QuarkusTestResourceLifecycleManag
         val conf: MutableMap<String, String> = HashMap()
         conf["quarkus.keycloak.admin-client.server-url"] = keycloakServerUrl
         conf["quarkus.rest-client.refresh-api.url"] = keycloakServerUrl
+        conf["quarkus.oidc.auth-server-url"] = "$keycloakServerUrl/realms/quarkus"
+        conf["quarkus.oidc.token.issue"] = "$keycloakServerUrl/realms/quarkus"
         println(keycloakServerUrl)
         return conf
     }
