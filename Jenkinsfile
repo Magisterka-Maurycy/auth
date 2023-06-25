@@ -21,7 +21,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh './gradlew test  -Dquarkus.package.type=native'
+                sh './gradlew quarkusIntTest'
             }
             post {
                 always {
