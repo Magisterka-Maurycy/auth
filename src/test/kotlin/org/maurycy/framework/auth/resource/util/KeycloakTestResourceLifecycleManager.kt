@@ -16,7 +16,7 @@ class KeycloakTestResourceLifecycleManager() : QuarkusTestResourceLifecycleManag
 
     override fun start(): Map<String, String> {
         keycloak.start()
-        val keycloakServerUrl = "http://" + keycloak.host + ":" + keycloak.getMappedPort(8080)
+        val keycloakServerUrl = "http://host.docker.internal:" + keycloak.getMappedPort(8080)
 
         val conf: MutableMap<String, String> = HashMap()
         conf["quarkus.keycloak.admin-client.server-url"] = keycloakServerUrl

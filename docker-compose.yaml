@@ -1,7 +1,6 @@
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:21.1
-    command: "start-dev" # development mode, do not use this in production!
+    image: quay.io/maurycy_krzeminski/keycloak
     container_name: keycloak
     ports:
       - "1234:8080"
