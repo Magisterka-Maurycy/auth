@@ -1,12 +1,11 @@
 package org.maurycy.framework.auth.resource.util
 
-import io.quarkus.logging.Log
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.Wait
 
 
-class KeycloakTestResourceLifecycleManager() : QuarkusTestResourceLifecycleManager {
+class KeycloakTestResourceLifecycleManager : QuarkusTestResourceLifecycleManager {
     private val keycloak: GenericContainer<*> = GenericContainer(KEYCLOAK_DOCKER_IMAGE)
         .withExposedPorts(8080)
         .withEnv("DB_VENDOR", "H2")
@@ -22,8 +21,7 @@ class KeycloakTestResourceLifecycleManager() : QuarkusTestResourceLifecycleManag
         conf["quarkus.keycloak.admin-client.server-url"] = keycloakServerUrl
         conf["quarkus.rest-client.refresh-api.url"] = keycloakServerUrl
         conf["quarkus.oidc.auth-server-url"] = "$keycloakServerUrl/realms/quarkus"
-        conf["quarkus.oidc.token.issue"] = "$keycloakServerUrl/realms/quarkus"
-        println(keycloakServerUrl)
+        conf["quarkus.oidc.token.issuer"] = "$keycloakServerUrl/realms/quarkus"
         return conf
     }
 

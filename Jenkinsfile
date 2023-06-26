@@ -22,10 +22,9 @@ pipeline {
         stage('Test') {
             environment {
                 DISABLE_AUTHORIZATION = true
-                QUAY_CREDS = credentials('Quay-Access')
             }
             steps {
-                sh './gradlew testNative -Dquarkus.container-image.username=$QUAY_CREDS_USR -Dquarkus.container-image.password=$QUAY_CREDS_PSW'
+                sh './gradlew test'
             }
             post {
                 always {
