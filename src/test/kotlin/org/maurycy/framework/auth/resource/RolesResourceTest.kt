@@ -62,6 +62,34 @@ class RolesResourceTest {
 
     }
 
+    @Test
+    @TestSecurity(user = "testUser", roles = ["admin"])
+    fun createRoleAlreadyExistsTest() {
+        val roleName = "RoleName"
+        RestAssured.given()
+            .body(CreateRoleDto(roleName, "RoleDescription"))
+            .contentType(MediaType.APPLICATION_JSON)
+            .`when`()
+            .post()
+            .then()
+            .statusCode(200)
+            .body(
+                CoreMatchers.containsString("true"),
+            )
+            RestAssured.given()
+            .body(CreateRoleDto(roleName, "RoleDescription"))
+            .contentType(MediaType.APPLICATION_JSON)
+            .`when`()
+            .post()
+            .then()
+            //TODO: should it be 200 or should it be changed to sth different for alreadyExist
+            .statusCode(200)
+            .body(
+                CoreMatchers.containsString("false"),
+            )
+        //cleanup
+        keycloakService.deleteRole(roleName)
+    }
 
     @Test
     @TestSecurity(user = "testUser", roles = ["admin"])
