@@ -8,3 +8,9 @@ services:
       KEYCLOAK_ADMIN: "admin"
       KEYCLOAK_ADMIN_PASSWORD: "admin"
       KC_METRICS_ENABLED: "false"
+  smtp:
+    image: mailhog/mailhog
+    ports:
+      - "8082:8025"
+      - "1025:1025"
+

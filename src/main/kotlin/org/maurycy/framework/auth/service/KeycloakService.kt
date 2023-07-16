@@ -16,6 +16,7 @@ import org.maurycy.framework.auth.model.LoginDto
 import org.maurycy.framework.auth.model.LoginReturnDto
 import org.maurycy.framework.auth.model.RefreshDto
 import org.maurycy.framework.auth.model.RegisterDto
+import org.maurycy.framework.auth.model.RegisterStartDto
 import org.maurycy.framework.auth.model.UserDto
 import org.maurycy.framework.auth.restClient.KeycloakRestClient
 
@@ -32,6 +33,7 @@ class KeycloakService(
     @ConfigProperty(name = "realmName", defaultValue = "quarkus")
     private val realmName: String
 ) {
+    private val RESET_PASSWORD_EMAIL_ACTION = "UPDATE_PASSWORD"
 
     fun login(loginDto: LoginDto): LoginReturnDto {
         val response = KeycloakBuilder.builder()
@@ -130,5 +132,24 @@ class KeycloakService(
                 Log.info("role removed")
             }
         }
+    }
+
+    fun registerStart(aRegisterDto: RegisterStartDto): Response {
+        val realmResource = keycloak.realm(realmName)
+        val userRepresentation = UserRepresentation()
+        userRepresentation.username = aRegisterDto.userName
+        userRepresentation.email = aRegisterDto.email
+        userRepresentation.requiredActions = listOf(RESET_PASSWORD_EMAIL_ACTION)
+        userRepresentation.isEnabled = true
+        val response = realmResource.users()
+            .create(userRepresentation)
+        Log.info(response)
+        return response
+    }
+
+    fun resetUserWithEmail(email: String) {
+        val id = keycloak.realm(realmName).users().searchByEmail(email, true)[0].id
+        val userResource = keycloak.realm(realmName).users()[id]
+        userResource.executeActionsEmail(listOf(RESET_PASSWORD_EMAIL_ACTION))
     }
 }
