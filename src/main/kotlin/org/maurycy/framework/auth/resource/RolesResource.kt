@@ -1,4 +1,4 @@
-package org.maurycy.framework.auth.resource.admin
+package org.maurycy.framework.auth.resource
 
 import jakarta.annotation.security.RolesAllowed
 import jakarta.ws.rs.Consumes
