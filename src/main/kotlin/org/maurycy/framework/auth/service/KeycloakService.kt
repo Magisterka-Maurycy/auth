@@ -139,7 +139,7 @@ class KeycloakService(
         val userRepresentation = UserRepresentation()
         userRepresentation.username = aRegisterDto.userName
         userRepresentation.email = aRegisterDto.email
-        userRepresentation.requiredActions = listOf(RESET_PASSWORD_EMAIL_ACTION)
+        userRepresentation.requiredActions.add(RESET_PASSWORD_EMAIL_ACTION)
         userRepresentation.isEnabled = true
         val response = realmResource.users()
             .create(userRepresentation)
