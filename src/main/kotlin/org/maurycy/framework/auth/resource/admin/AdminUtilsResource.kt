@@ -12,11 +12,16 @@ import org.maurycy.framework.auth.model.ResetUserDto
 import org.maurycy.framework.auth.service.KeycloakService
 
 
-@Path("admin/util")
+@Path("utils")
 @RolesAllowed("admin")
 class AdminUtilsResource(
     private val keycloakService: KeycloakService
 )  {
+    @POST
+    @Path("reset")
+    fun resetUserWithEmail(resetUser: ResetUserDto){
+        return keycloakService.resetUserWithEmail(resetUser.email)
+    }
     @POST
     @Path("register-without-password")
     @Produces(MediaType.APPLICATION_JSON)

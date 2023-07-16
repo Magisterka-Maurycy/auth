@@ -5,18 +5,16 @@ import jakarta.ws.rs.Path
 import jakarta.ws.rs.Produces
 import jakarta.ws.rs.core.MediaType
 import org.maurycy.framework.auth.model.AccessDto
-import org.maurycy.framework.auth.model.ResetUserDto
 import org.maurycy.framework.auth.model.UserDto
 import org.maurycy.framework.auth.service.KeycloakService
 
-@Path("util")
-class UtilResource(
+@Path("access")
+class AccessCheckResource(
     private val keycloakService: KeycloakService
 ) {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("access")
-    fun accessCheck(accessDto: AccessDto): Boolean {
+    fun access(accessDto: AccessDto): Boolean {
         val roles = keycloakService.getUserRoles(UserDto(accessDto.token))
         roles.forEach {
             if (accessDto.oneOfRoles.contains(it)) {
@@ -25,11 +23,4 @@ class UtilResource(
         }
         return false
     }
-
-    @POST
-    @Path("forget-password")
-    fun resetUserWithEmail(resetUser: ResetUserDto){
-        return keycloakService.resetUserWithEmail(resetUser.email)
-    }
-
 }

@@ -19,8 +19,8 @@ import org.maurycy.framework.auth.service.KeycloakService
 
 @QuarkusTest
 @QuarkusTestResource(KeycloakTestResourceLifecycleManager::class)
-@TestHTTPEndpoint(UtilResource::class)
-class UtilResourceTest {
+@TestHTTPEndpoint(AccessCheckResource::class)
+class AccessCheckResourceTest {
 
     @Inject
     @field: Default
@@ -34,7 +34,7 @@ class UtilResourceTest {
             .contentType(MediaType.APPLICATION_JSON)
             .body(AccessDto(res.accessToken, listOf()))
             .`when`()
-            .post("/access")
+            .post()
             .then()
             .statusCode(200)
             .body(
@@ -50,7 +50,7 @@ class UtilResourceTest {
             .contentType(MediaType.APPLICATION_JSON)
             .body(AccessDto(res.accessToken, listOf("user")))
             .`when`()
-            .post("/access")
+            .post()
             .then()
             .statusCode(200)
             .body(
@@ -66,7 +66,7 @@ class UtilResourceTest {
             .contentType(MediaType.APPLICATION_JSON)
             .body(AccessDto(res.accessToken, listOf("admin")))
             .`when`()
-            .post("/access")
+            .post()
             .then()
             .statusCode(200)
             .body(
