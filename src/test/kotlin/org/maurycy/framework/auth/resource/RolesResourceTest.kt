@@ -17,6 +17,7 @@ import org.maurycy.framework.auth.model.LoginDto
 import org.maurycy.framework.auth.model.RegisterDto
 import org.maurycy.framework.auth.model.UserDto
 import org.maurycy.framework.auth.model.UserToRoleDto
+import org.maurycy.framework.auth.resource.admin.RolesResource
 import org.maurycy.framework.auth.resource.util.KeycloakTestResourceLifecycleManager
 import org.maurycy.framework.auth.service.KeycloakService
 
