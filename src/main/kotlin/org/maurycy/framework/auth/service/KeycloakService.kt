@@ -1,6 +1,7 @@
 package org.maurycy.framework.auth.service
 
 import io.quarkus.logging.Log
+import io.vertx.ext.auth.impl.jose.JWT
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.ws.rs.core.Response
 import org.eclipse.microprofile.config.inject.ConfigProperty
@@ -101,10 +102,15 @@ class KeycloakService(
     }
 
     fun getUserRoles(userDto: UserDto): List<Any?> {
-        return io.vertx.ext.auth.impl.jose.JWT.parse(userDto.token)
-            .getJsonObject("payload")
-            .getJsonObject("realm_access")
-            .getJsonArray("roles").list
+        try {
+            return JWT.parse(userDto.token)
+                .getJsonObject("payload")
+                .getJsonObject("realm_access")
+                .getJsonArray("roles").list
+        } catch (aE: Exception) {
+            Log.error(aE)
+        }
+        return emptyList()
     }
 
     fun addRoleToUser(userName: String, roleName: String) {
