@@ -1,3 +1,3 @@
 package org.maurycy.framework.auth.model
 
-data class ResetUserDto(val email: String)
+data class ResetUserDto(val email: String="")
