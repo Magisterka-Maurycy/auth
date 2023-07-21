@@ -4,6 +4,7 @@ pipeline {
     parameters {
         booleanParam(name: 'OWASP', defaultValue: false, description: 'should owasp tests be run')
         booleanParam(name: 'RELEASE', defaultValue: false, description: 'should new version be release')
+        booleanParam(name: 'TEST', defaultValue: true, description: 'should tests be run')
     }
 
     stages {
@@ -22,6 +23,11 @@ pipeline {
         stage('Test') {
             environment {
                 DISABLE_AUTHORIZATION = true
+            }
+            when {
+                expression {
+                    return params.TEST == true
+                }
             }
             steps {
                 sh './gradlew test'
