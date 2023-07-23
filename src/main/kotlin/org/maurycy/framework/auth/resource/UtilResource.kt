@@ -28,7 +28,7 @@ class UtilResource(
 
     @POST
     @Path("forget-password")
-    fun resetUserWithEmail(resetUser: ResetUserDto){
+    fun resetUserWithEmail(resetUser: ResetUserDto): Boolean {
         return keycloakService.resetUserWithEmail(resetUser.email)
     }
 

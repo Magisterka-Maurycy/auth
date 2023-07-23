@@ -153,9 +153,14 @@ class KeycloakService(
         return response
     }
 
-    fun resetUserWithEmail(email: String) {
-        val id = keycloak.realm(realmName).users().searchByEmail(email, true)[0].id
+    fun resetUserWithEmail(email: String): Boolean {
+        val users = keycloak.realm(realmName).users().searchByEmail(email, true)
+        if(users.size != 1) {
+            return false
+        }
+        val id = users[0].id
         val userResource = keycloak.realm(realmName).users()[id]
         userResource.executeActionsEmail(listOf(RESET_PASSWORD_EMAIL_ACTION))
+        return  true
     }
 }
