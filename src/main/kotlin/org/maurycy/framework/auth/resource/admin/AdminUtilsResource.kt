@@ -8,7 +8,6 @@ import jakarta.ws.rs.Produces
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import org.maurycy.framework.auth.model.RegisterStartDto
-import org.maurycy.framework.auth.model.ResetUserDto
 import org.maurycy.framework.auth.service.KeycloakService
 
 
