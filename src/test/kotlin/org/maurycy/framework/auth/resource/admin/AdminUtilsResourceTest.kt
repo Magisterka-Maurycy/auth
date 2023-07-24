@@ -8,7 +8,6 @@ import io.restassured.RestAssured
 import jakarta.ws.rs.core.MediaType
 import org.hamcrest.CoreMatchers
 import org.junit.jupiter.api.Test
-import org.maurycy.framework.auth.model.RegisterDto
 import org.maurycy.framework.auth.model.RegisterStartDto
 import org.maurycy.framework.auth.resource.util.KeycloakTestResourceLifecycleManager
 
@@ -22,7 +21,7 @@ class AdminUtilsResourceTest {
     fun registerWithoutPassword() {
         RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(RegisterStartDto("user1",  "test@email"))
+            .body(RegisterStartDto("userAdminUtilsResourceTest",  "testAdminUtilsResourceTest@email"))
             .`when`()
             .post("register-without-password")
             .then()
