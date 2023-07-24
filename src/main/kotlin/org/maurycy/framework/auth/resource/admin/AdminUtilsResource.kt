@@ -20,5 +20,5 @@ class AdminUtilsResource(
     @Path("register-without-password")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    fun registerStart(registerDto: RegisterStartDto): Response = keycloakService.registerStart(registerDto)
+    fun registerWithoutPassword(registerDto: RegisterStartDto): Response = keycloakService.registerStart(registerDto)
 }
