@@ -21,17 +21,17 @@ class KeycloakResource(
     @Path("login")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    fun login(loginDto: LoginDto): LoginReturnDto = keycloakService.login(loginDto)
+    suspend fun login(loginDto: LoginDto): LoginReturnDto = keycloakService.login(loginDto)
 
     @POST
     @Path("refresh")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    fun refresh(refreshDto: RefreshDto): Response? = keycloakService.refresh(refreshDto)
+    suspend fun refresh(refreshDto: RefreshDto): Response? = keycloakService.refresh(refreshDto)
 
     @POST
     @Path("register")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    fun register(registerDto: RegisterDto): Response = keycloakService.register(registerDto)
+    suspend fun register(registerDto: RegisterDto): Response = keycloakService.register(registerDto)
 }
