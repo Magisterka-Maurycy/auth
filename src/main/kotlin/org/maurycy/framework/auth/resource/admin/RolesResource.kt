@@ -22,34 +22,34 @@ class RolesResource(
 ) {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    suspend fun getAllRoles(): List<String> = keycloakService.getRoles()
+    fun getAllRoles(): List<String> = keycloakService.getRoles()
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    suspend fun createRole(createRoleDto: CreateRoleDto): Boolean = keycloakService.createRole(createRoleDto)
+    fun createRole(createRoleDto: CreateRoleDto): Boolean = keycloakService.createRole(createRoleDto)
 
     @DELETE
     @Path("{name}")
-    suspend fun deleteRole(@PathParam("name") name: String) = keycloakService.deleteRole(name)
+    fun deleteRole(@PathParam("name") name: String) = keycloakService.deleteRole(name)
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("users")
     @ResponseStatus(200)
-    suspend fun userToRole(userToRoleDto: UserToRoleDto) =
+    fun userToRole(userToRoleDto: UserToRoleDto) =
         keycloakService.addRoleToUser(userName = userToRoleDto.user, roleName = userToRoleDto.role)
 
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("users")
     @ResponseStatus(200)
-    suspend fun removeRoleFromUser(userToRoleDto: UserToRoleDto) =
+    fun removeRoleFromUser(userToRoleDto: UserToRoleDto) =
         keycloakService.removeRoleFromUser(userName = userToRoleDto.user, roleName = userToRoleDto.role)
 
     @POST
     @Path("token")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    suspend fun getRoles(userDto: UserDto): List<Any?> = keycloakService.getUserRoles(userDto)
+    fun getRoles(userDto: UserDto): List<Any?> = keycloakService.getUserRoles(userDto)
 
 }

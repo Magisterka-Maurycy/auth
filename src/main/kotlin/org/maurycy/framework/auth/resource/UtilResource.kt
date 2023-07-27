@@ -16,7 +16,7 @@ class UtilResource(
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("access")
-    suspend fun accessCheck(accessDto: AccessDto): Boolean {
+    fun accessCheck(accessDto: AccessDto): Boolean {
         val roles = keycloakService.getUserRoles(UserDto(accessDto.token))
         roles.forEach {
             if (accessDto.oneOfRoles.contains(it)) {
@@ -28,7 +28,7 @@ class UtilResource(
 
     @POST
     @Path("forget-password")
-    suspend fun resetUserWithEmail(resetUser: ResetUserDto): Boolean {
+    fun resetUserWithEmail(resetUser: ResetUserDto): Boolean {
         return keycloakService.resetUserWithEmail(resetUser.email)
     }
 
