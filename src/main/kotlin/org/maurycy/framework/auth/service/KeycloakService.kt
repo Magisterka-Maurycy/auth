@@ -53,18 +53,17 @@ class KeycloakService(
         return keycloakRestClient.refreshToken("refresh_token", refreshDto.refreshToken)
     }
 
-    fun register(registerDto: RegisterDto): Response {
-        val realmResource = keycloak.realm(realmName)
+    private fun getUserRepresentation(userName: String, email: String): UserRepresentation {
         val userRepresentation = UserRepresentation()
-        userRepresentation.username = registerDto.userName
-        userRepresentation.email = registerDto.email
-        val credentialRepresentation = CredentialRepresentation()
-        credentialRepresentation.isTemporary = false
-        credentialRepresentation.type = CredentialRepresentation.PASSWORD
-        credentialRepresentation.value = registerDto.password
-        userRepresentation.credentials = listOf(credentialRepresentation)
+        userRepresentation.username = userName
+        userRepresentation.email = email
         userRepresentation.isEnabled = true
-        val response = realmResource.users()
+        return userRepresentation
+    }
+
+    private fun createUser(userRepresentation: UserRepresentation): Response {
+        val realmResource = keycloak.realm(realmName)
+        val response: Response = realmResource.users()
             .create(userRepresentation)
         val userId = CreatedResponseUtil.getCreatedId(response)
         val userResource = realmResource.users()[userId]
@@ -72,10 +71,28 @@ class KeycloakService(
         val userRealmRole = realmResource.roles()["user"].toRepresentation()
         userResource.roles().realmLevel() //
             .add(listOf(userRealmRole))
-        Log.info(response)
         return response
     }
 
+    private fun setPassword(userRepresentation: UserRepresentation, password: String) {
+        val credentialRepresentation = CredentialRepresentation()
+        credentialRepresentation.isTemporary = false
+        credentialRepresentation.type = CredentialRepresentation.PASSWORD
+        credentialRepresentation.value = password
+        userRepresentation.credentials = listOf(credentialRepresentation)
+    }
+
+    fun register(registerDto: RegisterDto): Response {
+        val userRepresentation = getUserRepresentation(registerDto.userName, registerDto.email)
+        setPassword(userRepresentation, registerDto.password)
+
+        return createUser(userRepresentation)
+    }
+
+    fun registerStart(aRegisterDto: RegisterStartDto): Response {
+        val userRepresentation = getUserRepresentation(aRegisterDto.userName, aRegisterDto.email)
+        return createUser(userRepresentation)
+    }
 
     fun getRoles(): List<String> {
         return keycloak.realm(realmName).roles().list().toList().map {
@@ -140,27 +157,14 @@ class KeycloakService(
         }
     }
 
-    fun registerStart(aRegisterDto: RegisterStartDto): Response {
-        val realmResource = keycloak.realm(realmName)
-        val userRepresentation = UserRepresentation()
-        userRepresentation.username = aRegisterDto.userName
-        userRepresentation.email = aRegisterDto.email
-        userRepresentation.requiredActions = listOf(RESET_PASSWORD_EMAIL_ACTION)
-        userRepresentation.isEnabled = true
-        val response = realmResource.users()
-            .create(userRepresentation)
-        Log.info(response)
-        return response
-    }
-
     fun resetUserWithEmail(email: String): Boolean {
         val users = keycloak.realm(realmName).users().searchByEmail(email, true)
-        if(users.size != 1) {
+        if (users.size != 1) {
             return false
         }
         val id = users[0].id
         val userResource = keycloak.realm(realmName).users()[id]
         userResource.executeActionsEmail(listOf(RESET_PASSWORD_EMAIL_ACTION))
-        return  true
+        return true
     }
 }
